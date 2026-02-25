@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile_user.username }} – LinkInBio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f0f13;
+            min-height: 100vh;
+            color: #e5e7eb;
+            background-image:
+                radial-gradient(ellipse at 20% 10%, rgba(120, 80, 255, 0.12) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 200, 255, 0.09) 0%, transparent 50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 24px 80px;
+        }
+
+        .profile-card {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        /* Avatar area */
+        .avatar-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c3aed, #06b6d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 14px;
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2);
+        }
+
+        .username {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .bio {
+            font-size: 15px;
+            color: #9ca3af;
+            text-align: center;
+            margin-top: 8px;
+            line-height: 1.6;
+            max-width: 360px;
+        }
+
+        /* Powered badge */
+        .powered {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: #4b5563;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 4px 12px;
+            margin-top: 14px;
+        }
+
+        /* Divider */
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
+            margin: 28px 0;
+        }
+
+        /* Links */
+        .section-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #4b5563;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .links-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 14px;
+            padding: 16px 20px;
+            text-decoration: none;
+            color: #fff;
+            transition: border-color 0.2s, background 0.2s, transform 0.15s;
+        }
+
+        .link-item:hover {
+            border-color: rgba(124, 58, 237, 0.4);
+            background: rgba(124, 58, 237, 0.07);
+            transform: translateY(-2px);
+        }
+
+        .link-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #7c3aed22, #06b6d422);
+            border: 1px solid rgba(124, 58, 237, 0.25);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .link-text {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .link-arrow {
+            margin-left: auto;
+            color: #4b5563;
+            font-size: 18px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 0;
+            color: #4b5563;
+        }
+
+        .empty-state .icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 48px;
+            text-align: center;
+        }
+
+        footer a {
+            font-size: 13px;
+            color: #4b5563;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        footer a:hover {
+            color: #9ca3af;
+            border-color: #9ca3af;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-card">
+        <div class="avatar-wrap">
+            <div class="avatar">
+                {{ profile_user.username|slice:":1"|upper }}
+            </div>
+            <div class="username">{{ profile_user.username }}</div>
+            {% if bio %}
+            <div class="bio">{{ bio }}</div>
+            {% endif %}
+            <div class="powered">🔗 LinkInBio</div>
+        </div>
+
+        <div class="divider"></div>
+
+        {% if links %}
+        <div class="section-label">Links</div>
+        <div class="links-list">
+            {% for link in links %}
+            <a href="{{ link.url }}" target="_blank" class="link-item">
+                <div class="link-icon">🔗</div>
+                <span class="link-text">{{ link.title }}</span>
+                <span class="link-arrow">›</span>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="icon">🔗</div>
+            <p>No links yet.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <footer>
+        <a href="/">Create your own LinkInBio page</a>
+    </footer>
+</body>
+
+</html>
